@@ -96,6 +96,14 @@ public class CellManager : MonoBehaviour
         if(time > 1)
         {
             skin.algorithm.GenerationPerTick(skin);
+            kidnies.algorithm.GenerationPerTick(kidnies);
+            livers.algorithm.GenerationPerTick(livers);
+            bones.algorithm.GenerationPerTick(bones);
+            lungs.algorithm.GenerationPerTick(lungs);
+            eyes.algorithm.GenerationPerTick(eyes);
+            hearts.algorithm.GenerationPerTick(hearts);
+            brains.algorithm.GenerationPerTick(brains);
+
             time = 0;
         }
         time += Time.deltaTime;
@@ -151,7 +159,7 @@ public class Organ
 {
     public int numberOfUnits;
     public int pricePerUnit;
-    public int cellsPerTick;
+    [HideInInspector] public int cellsPerTick;
     public int cellsPerClick;
     public CellManager owner;
     public GenerationAlgorithms algorithm;
@@ -172,6 +180,10 @@ public class Organ
 
     public void UpdateInformation()
     {
+        if (owner.cells < pricePerUnit)
+            BuyOrgan.interactable = false;
+        else
+            BuyOrgan.interactable = true;
         BuyOrgan.GetComponentInChildren<Text>().text = "<b>Buy: </b>" + pricePerUnit;
         if (numberOfUnits == 1)
             GenCell.interactable = true; 
