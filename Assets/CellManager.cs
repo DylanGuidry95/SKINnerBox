@@ -1,19 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public static class CellManager
+public class CellManager : MonoBehaviour
 {
-    public static int cells;
-    public static int people;
+    public int cells;
+    public int people;
 
-    public static Organ skin;
-    public static Organ kidnies;
-    public static Organ livers;
-    public static Organ bones;
-    public static Organ lungs;
-    public static Organ hearts;
-    public static Organ brains;
-    public static Organ eyes;
+    public Organ skin;
+    public Organ kidnies;
+    public Organ livers;
+    public Organ bones;
+    public Organ lungs;
+    public Organ eyes;
+    public Organ hearts;
+    public Organ brains;
+
+    public void BuyOrgan(Organ type)
+    {
+        if(cells >= type.pricePerUnit)
+        {
+            cells -= type.pricePerUnit;
+            type.numberOfUnits++;
+        }
+    }
 }
 
 public class Organ
