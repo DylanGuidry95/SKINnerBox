@@ -8,6 +8,10 @@ public class CellManager : MonoBehaviour
     public int cells;
     public int people;
 
+    public int totalCellPerTick;
+
+    public Text Income;
+
     public Organ skin;
     public Organ kidnies;
     public Organ livers;
@@ -30,18 +34,18 @@ public class CellManager : MonoBehaviour
     }
 
 
-    void BuildPerson()
+    public void BuildPerson()
     {
-        if(skin.numberOfUnits >= 1 && kidnies.numberOfUnits >= 1 && bones.numberOfUnits >= 1 && livers.numberOfUnits >= 1 && lungs.numberOfUnits >= 1 && eyes.numberOfUnits >= 1 && hearts.numberOfUnits >= 1 && brains.numberOfUnits >= 1)
+        if(skin.numberOfUnits >= 10 && kidnies.numberOfUnits >= 10 && bones.numberOfUnits >= 10 && livers.numberOfUnits >= 10 && lungs.numberOfUnits >= 10 && eyes.numberOfUnits >= 10 && hearts.numberOfUnits >= 10 && brains.numberOfUnits >= 10)
         {
-            skin.numberOfUnits--;
-            kidnies.numberOfUnits--;
-            livers.numberOfUnits--;
-            bones.numberOfUnits--;
-            lungs.numberOfUnits--;
-            eyes.numberOfUnits--;
-            hearts.numberOfUnits--;
-            brains.numberOfUnits--;
+            skin.numberOfUnits-=10;
+            kidnies.numberOfUnits-=10;
+            livers.numberOfUnits-=10;
+            bones.numberOfUnits-=10;
+            lungs.numberOfUnits-=10;
+            eyes.numberOfUnits-=10;
+            hearts.numberOfUnits-=10;
+            brains.numberOfUnits-=10;
             people++;
         }
     }
@@ -54,6 +58,8 @@ public class CellManager : MonoBehaviour
             type.numberOfUnits++;
             type.pricePerUnit = type.pricePerUnit + (type.numberOfUnits * 2);
             type.cellsPerTick = type.cellsPerClick * (type.numberOfUnits / 10);
+
+            UpdateTotalTick();
         }
     }
 
@@ -90,6 +96,19 @@ public class CellManager : MonoBehaviour
         BuyOrgan(brains);
     }
 
+    void UpdateTotalTick()
+    {
+        totalCellPerTick =
+            skin.cellsPerTick +
+            kidnies.cellsPerTick +
+            livers.cellsPerTick +
+            bones.cellsPerTick +
+            lungs.cellsPerTick +
+            eyes.cellsPerTick +
+            hearts.cellsPerTick +
+            brains.cellsPerTick;
+    }
+
     public float time = 0;
     void Update()
     {
@@ -107,6 +126,7 @@ public class CellManager : MonoBehaviour
             time = 0;
         }
         time += Time.deltaTime;
+
         skin.UpdateInformation();
         kidnies.UpdateInformation();
         livers.UpdateInformation();
@@ -115,6 +135,8 @@ public class CellManager : MonoBehaviour
         eyes.UpdateInformation();
         hearts.UpdateInformation();
         brains.UpdateInformation();
+
+        Income.text = cells + "¢ @ " + totalCellPerTick + " ¢ps";
     }
 
     public void GenCell(string organ)
@@ -184,10 +206,10 @@ public class Organ
             BuyOrgan.interactable = false;
         else
             BuyOrgan.interactable = true;
-        BuyOrgan.GetComponentInChildren<Text>().text = "<b>Buy: </b>" + pricePerUnit;
+        BuyOrgan.GetComponentInChildren<Text>().text = "<b>Buy: </b>" + pricePerUnit + "¢";
         if (numberOfUnits == 1)
             GenCell.interactable = true; 
-        Information.text = numberOfUnits + "<b> X </b>" + cellsPerClick + "<b> || </b>" + cellsPerTick + " (¢ps)";
+        Information.text = numberOfUnits + "<b> X </b>" + cellsPerClick + "<b> || </b>" + cellsPerTick + " ¢ps";
     }
 
     public void GenerateCells()
