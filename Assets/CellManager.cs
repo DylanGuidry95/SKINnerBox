@@ -19,7 +19,14 @@ public class CellManager : MonoBehaviour
 
     void Start()
     {
-        skin = new Organ(this, 1, 2);
+        skin.owner = this;
+        kidnies.owner = this;
+        livers.owner = this;
+        bones.owner = this;
+        lungs.owner = this;
+        eyes.owner = this;
+        hearts.owner = this;
+        brains.owner = this;
     }
 
     void BuildPerson()
@@ -47,6 +54,82 @@ public class CellManager : MonoBehaviour
         }
     }
 
+    public void BuySkin()
+    {
+        BuyOrgan(skin);
+    }
+    public void BuyKidney()
+    {
+        BuyOrgan(kidnies);
+    }
+    public void BuyLiver()
+    {
+        BuyOrgan(livers);
+    }
+    public void BuyBone()
+    {
+        BuyOrgan(bones);
+    }
+    public void BuyLung()
+    {
+        BuyOrgan(lungs);
+    }
+    public void BuyEye()
+    {
+        BuyOrgan(eyes);
+    }
+    public void BuyHeart()
+    {
+        BuyOrgan(hearts);
+    }
+    public void BuyBrain()
+    {
+        BuyOrgan(brains);
+    }
+
+    void Update()
+    {
+        skin.UpdateInformation();
+        kidnies.UpdateInformation();
+        livers.UpdateInformation();
+        bones.UpdateInformation();
+        lungs.UpdateInformation();
+        eyes.UpdateInformation();
+        hearts.UpdateInformation();
+        brains.UpdateInformation();
+    }
+
+    public void GenCell(string organ)
+    {
+        switch(organ)
+        {
+            case "Skin":
+                skin.GenerateCells();
+                break;
+            case "Kidney":
+                kidnies.GenerateCells();
+                break;
+            case "Liver":
+                livers.GenerateCells();
+                break;
+            case "Bone":
+                bones.GenerateCells();
+                break;
+            case "Lung":
+                lungs.GenerateCells();
+                break;
+            case "Eye":
+                eyes.GenerateCells();
+                break;
+            case "Heart":
+                hearts.GenerateCells();
+                break;
+            case "Brain":
+                brains.GenerateCells();
+                break;
+        }
+    }
+
     public void Exit()
     {
         Application.Quit();
@@ -60,10 +143,11 @@ public class Organ
     public int pricePerUnit;
     public int cellsPerTick;
     public int cellsPerClick;
-    CellManager owner;
+    public CellManager owner;
     public GenerationAlgorithms algorithm;
     public Text Information;
     public Button BuyOrgan;
+    public Button GenCell;
     
 
     public Organ(CellManager cm, int price, int cpt)
@@ -80,6 +164,13 @@ public class Organ
     public void UpdateInformation()
     {
         BuyOrgan.GetComponentInChildren<Text>().text = "<b>Buy: </b>" + pricePerUnit;
+        if (numberOfUnits == 1)
+            GenCell.interactable = true; 
         Information.text = "<b>Click: </b>" + cellsPerClick + "<b> || </b>" + "<b>Idle: </b>" + cellsPerTick;
+    }
+
+    public void GenerateCells()
+    {
+        owner.cells += cellsPerClick;
     }
 }

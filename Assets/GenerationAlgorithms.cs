@@ -16,7 +16,6 @@ public class GenerationAlgorithms
     {
         if (mOrgan.numberOfUnits > 0)
         {
-
             cellManager.cells += mOrgan.cellsPerTick / (mOrgan.numberOfUnits / 10);
             mOrgan.cellsPerClick = mOrgan.cellsPerTick * (mOrgan.numberOfUnits) * (1+ cellManager.people);
             mOrgan.pricePerUnit = mOrgan.pricePerUnit * (mOrgan.numberOfUnits + 1);
