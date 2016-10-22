@@ -14,6 +14,6 @@ public class UIStacking : MonoBehaviour
         GameObject human = Instantiate(mHuman);
         human.transform.SetParent(this.transform);
         human.transform.position =
-            new Vector3(Random.Range(SpawnAnchor1.position.x, SpawnAnchor2.position.x), transform.position.y, transform.position.z);
+            new Vector3(Random.Range(SpawnAnchor1.position.x, SpawnAnchor2.position.x) + Random.Range(-50,50), transform.position.y, transform.position.z);
     }
 }
