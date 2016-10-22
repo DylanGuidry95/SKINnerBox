@@ -29,6 +29,7 @@ public class CellManager : MonoBehaviour
         brains.owner = this;
     }
 
+
     void BuildPerson()
     {
         if(skin.numberOfUnits >= 1 && kidnies.numberOfUnits >= 1 && bones.numberOfUnits >= 1 && livers.numberOfUnits >= 1 && lungs.numberOfUnits >= 1 && eyes.numberOfUnits >= 1 && hearts.numberOfUnits >= 1 && brains.numberOfUnits >= 1)
@@ -51,6 +52,8 @@ public class CellManager : MonoBehaviour
         {
             cells -= type.pricePerUnit;
             type.numberOfUnits++;
+            type.pricePerUnit = type.pricePerUnit + (type.numberOfUnits * 2);
+            type.cellsPerTick = type.cellsPerClick * (type.numberOfUnits / 10);
         }
     }
 
@@ -87,8 +90,15 @@ public class CellManager : MonoBehaviour
         BuyOrgan(brains);
     }
 
+    public float time = 0;
     void Update()
     {
+        if(time > 1)
+        {
+            skin.algorithm.GenerationPerTick(skin);
+            time = 0;
+        }
+        time += Time.deltaTime;
         skin.UpdateInformation();
         kidnies.UpdateInformation();
         livers.UpdateInformation();
@@ -150,27 +160,26 @@ public class Organ
     public Button GenCell;
     
 
-    public Organ(CellManager cm, int price, int cpt)
-    {
-        owner = cm;
-        pricePerUnit = price;
-        cellsPerTick = cpt;
-        algorithm = new GenerationAlgorithms();
-        algorithm.cellManager = owner;
-        algorithm.mOrgan = this;
-        numberOfUnits = 1;
-    }
+    //public Organ(CellManager cm, int price, int cpt)
+    //{
+    //    owner = cm;
+    //    pricePerUnit = price;
+    //    cellsPerTick = cpt;
+    //    algorithm = new GenerationAlgorithms();
+    //    algorithm.cellManager = owner;
+    //    numberOfUnits = 1;
+    //}
 
     public void UpdateInformation()
     {
         BuyOrgan.GetComponentInChildren<Text>().text = "<b>Buy: </b>" + pricePerUnit;
         if (numberOfUnits == 1)
             GenCell.interactable = true; 
-        Information.text = "<b>Click: </b>" + cellsPerClick + "<b> || </b>" + "<b>Idle: </b>" + cellsPerTick;
+        Information.text = numberOfUnits + "<b> X </b>" + cellsPerClick + "<b> || </b>" + cellsPerTick + " (¢ps)";
     }
 
     public void GenerateCells()
     {
-        owner.cells += cellsPerClick;
+        owner.cells += cellsPerClick * (numberOfUnits * (1 + owner.people));
     }
 }

@@ -7,18 +7,14 @@ public class GenerationAlgorithms
 {
     public int mNeededToGrowth;
     public int mGenerationAmountPerTick;
-    public CellManager cellManager;
-    public Organ mOrgan;
 
     public GenerationAlgorithms() { }
 
-    public void GenerationPerTick()
+    public void GenerationPerTick(Organ o)
     {
-        if (mOrgan.numberOfUnits > 0)
+        if (o.numberOfUnits >= 10)
         {
-            cellManager.cells += mOrgan.cellsPerTick / (mOrgan.numberOfUnits / 10);
-            mOrgan.cellsPerClick = mOrgan.cellsPerTick * (mOrgan.numberOfUnits) * (1+ cellManager.people);
-            mOrgan.pricePerUnit = mOrgan.pricePerUnit * (mOrgan.numberOfUnits + 1);
+            o.owner.cells += o.cellsPerClick * (o.numberOfUnits / 10);
         }
     }
 }
