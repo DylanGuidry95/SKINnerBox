@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 public class CellManager : MonoBehaviour
 {
@@ -15,6 +16,11 @@ public class CellManager : MonoBehaviour
     public Organ eyes;
     public Organ hearts;
     public Organ brains;
+
+    void Start()
+    {
+        skin = new Organ(this, 1, 2);
+    }
 
     void BuildPerson()
     {
@@ -40,6 +46,11 @@ public class CellManager : MonoBehaviour
             type.numberOfUnits++;
         }
     }
+
+    public void Exit()
+    {
+        Application.Quit();
+    }
 }
 
 [Serializable]
@@ -48,8 +59,12 @@ public class Organ
     public int numberOfUnits;
     public int pricePerUnit;
     public int cellsPerTick;
+    public int cellsPerClick;
     CellManager owner;
     public GenerationAlgorithms algorithm;
+    public Text Information;
+    public Button BuyOrgan;
+    
 
     public Organ(CellManager cm, int price, int cpt)
     {
@@ -60,5 +75,11 @@ public class Organ
         algorithm.cellManager = owner;
         algorithm.mOrgan = this;
         numberOfUnits = 1;
+    }
+
+    public void UpdateInformation()
+    {
+        BuyOrgan.GetComponentInChildren<Text>().text = "<b>Buy: </b>" + pricePerUnit;
+        Information.text = "<b>Click: </b>" + cellsPerClick + "<b> || </b>" + "<b>Idle: </b>" + cellsPerTick;
     }
 }
