@@ -7,10 +7,10 @@ public class CellManager : MonoBehaviour
 {
     public Button bodyButton;
 
-    public int cells;
-    public int people;
+    public long cells;
+    public long people;
 
-    public int totalCellPerTick;
+    public long totalCellPerTick;
 
     public Text Income;
 
@@ -37,12 +37,19 @@ public class CellManager : MonoBehaviour
         skin.canBuy = true;
     }
 
+    bool canBuildPerson
+    {
+        get
+        {
+            return skin.numberOfUnits >= 10 && kidnies.numberOfUnits >= 10 && bones.numberOfUnits >= 10 &&
+            livers.numberOfUnits >= 10 && lungs.numberOfUnits >= 10 && eyes.numberOfUnits >= 10 &&
+            hearts.numberOfUnits >= 10 && brains.numberOfUnits >= 10 && cells >= 1000000;
+        }
+    }
 
     public void BuildPerson()
     {
-        if(skin.numberOfUnits >= 10 && kidnies.numberOfUnits >= 10 && bones.numberOfUnits >= 10 &&
-            livers.numberOfUnits >= 10 && lungs.numberOfUnits >= 10 && eyes.numberOfUnits >= 10 &&
-            hearts.numberOfUnits >= 10 && brains.numberOfUnits >= 10 && cells >= 1000000)
+        if(canBuildPerson)
         {
             UIStacking.CreateHuman.Invoke();
             cells -= 1000000;
@@ -64,8 +71,8 @@ public class CellManager : MonoBehaviour
         {
             cells -= type.pricePerUnit;
             type.numberOfUnits++;
-            type.pricePerUnit = type.pricePerUnit + (int)(type.pricePerUnit * 0.25f);
-            type.cellsPerTick = type.cellsPerClick * (type.numberOfUnits / 3);
+            type.pricePerUnit = type.pricePerUnit + (int)(type.pricePerUnit * 0.35f);
+            type.cellsPerTick = type.cellsPerClick * (int)(type.numberOfUnits / 3.0f);
 
             if (!type.isGenerating)
                 StartCoroutine(type.Generate());
@@ -97,7 +104,7 @@ public class CellManager : MonoBehaviour
         if (livers.numberOfUnits >= 10)
             bones.canBuy = true;
         else
-            kidnies.canBuy = false;
+            bones.canBuy = false;
     }
     public void BuyBone()
     {
@@ -156,6 +163,8 @@ public class CellManager : MonoBehaviour
     public float time = 0;
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Z))
+            cells += 999999999;
         //if(time > 1)
         //{
         //    skin.algorithm.GenerationPerTick(skin);
@@ -182,7 +191,7 @@ public class CellManager : MonoBehaviour
 
         bodyButton.GetComponent<Image>().color = new Color(1, 1, 1, 0.10f + (cells / 1000000.0f));
 
-        if (bodyButton.GetComponent<Image>().color.a >= 1)
+        if (bodyButton.GetComponent<Image>().color.a >= 1 && canBuildPerson)
             bodyButton.interactable = true;
         else
             bodyButton.interactable = false;
@@ -232,10 +241,10 @@ public class CellManager : MonoBehaviour
 [Serializable]
 public class Organ
 {
-    public int numberOfUnits;
-    public int pricePerUnit;
-    [HideInInspector] public int cellsPerTick;
-    public int cellsPerClick;
+    public long numberOfUnits;
+    public long pricePerUnit;
+    [HideInInspector] public long cellsPerTick;
+    public long cellsPerClick;
     [HideInInspector] public CellManager owner;
     [HideInInspector] public GenerationAlgorithms algorithm;
     public Text Information;
@@ -274,12 +283,12 @@ public class Organ
         if (numberOfUnits == 1)
             GenCell.interactable = true;
 
-        int perTic = 0;
+        long perTic = 0;
 
         if (numberOfUnits >= 5)
             perTic = cellsPerTick;
 
-        Information.text = numberOfUnits + "<b> X </b>" + cellsPerClick + "<b> || </b>" + perTic + " ¢ps";
+        Information.text = numberOfUnits + "<b> X </b>" + cellsPerClick + "¢<b> || </b>" + perTic + " ¢ps";
     }
 
     public void GenerateCells()
