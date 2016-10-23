@@ -12,7 +12,7 @@ public class GenerationAlgorithms
 
     public void GenerationPerTick(Organ o)
     {
-        if (o.numberOfUnits >= 10)
+        if (o.numberOfUnits >= 5)
         {
             o.owner.cells += o.cellsPerClick * (o.numberOfUnits / 3);
         }
