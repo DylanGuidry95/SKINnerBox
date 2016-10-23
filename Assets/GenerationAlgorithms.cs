@@ -14,7 +14,7 @@ public class GenerationAlgorithms
     {
         if (o.numberOfUnits >= 10)
         {
-            o.owner.cells += o.cellsPerClick * (o.numberOfUnits / 10);
+            o.owner.cells += o.cellsPerClick * (o.numberOfUnits / 3);
         }
     }
 }

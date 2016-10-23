@@ -8,6 +8,10 @@ public class CellManager : MonoBehaviour
     public int cells;
     public int people;
 
+    public int totalCellPerTick;
+
+    public Text Income;
+
     public Organ skin;
     public Organ kidnies;
     public Organ livers;
@@ -30,18 +34,19 @@ public class CellManager : MonoBehaviour
     }
 
 
-    void BuildPerson()
+    public void BuildPerson()
     {
-        if(skin.numberOfUnits >= 1 && kidnies.numberOfUnits >= 1 && bones.numberOfUnits >= 1 && livers.numberOfUnits >= 1 && lungs.numberOfUnits >= 1 && eyes.numberOfUnits >= 1 && hearts.numberOfUnits >= 1 && brains.numberOfUnits >= 1)
+        if(skin.numberOfUnits >= 10 && kidnies.numberOfUnits >= 10 && bones.numberOfUnits >= 10 && livers.numberOfUnits >= 10 && lungs.numberOfUnits >= 10 && eyes.numberOfUnits >= 10 && hearts.numberOfUnits >= 10 && brains.numberOfUnits >= 10)
         {
-            skin.numberOfUnits--;
-            kidnies.numberOfUnits--;
-            livers.numberOfUnits--;
-            bones.numberOfUnits--;
-            lungs.numberOfUnits--;
-            eyes.numberOfUnits--;
-            hearts.numberOfUnits--;
-            brains.numberOfUnits--;
+            UIStacking.CreateHuman.Invoke();
+            skin.numberOfUnits-=10;
+            kidnies.numberOfUnits-=10;
+            livers.numberOfUnits-=10;
+            bones.numberOfUnits-=10;
+            lungs.numberOfUnits-=10;
+            eyes.numberOfUnits-=10;
+            hearts.numberOfUnits-=10;
+            brains.numberOfUnits-=10;
             people++;
         }
     }
@@ -52,8 +57,10 @@ public class CellManager : MonoBehaviour
         {
             cells -= type.pricePerUnit;
             type.numberOfUnits++;
-            type.pricePerUnit = type.pricePerUnit + (type.numberOfUnits * 2);
-            type.cellsPerTick = type.cellsPerClick * (type.numberOfUnits / 10);
+            type.pricePerUnit = type.pricePerUnit + (type.numberOfUnits * type.numberOfUnits);
+            type.cellsPerTick = type.cellsPerClick * (type.numberOfUnits / 3);
+
+            UpdateTotalTick();
         }
     }
 
@@ -90,6 +97,19 @@ public class CellManager : MonoBehaviour
         BuyOrgan(brains);
     }
 
+    void UpdateTotalTick()
+    {
+        totalCellPerTick = 0;
+        totalCellPerTick += skin.numberOfUnits >= 10 ? skin.cellsPerTick : 0;
+        totalCellPerTick += kidnies.numberOfUnits >= 10 ? kidnies.cellsPerTick : 0;
+        totalCellPerTick += livers.numberOfUnits >= 10 ? livers.cellsPerTick : 0;
+        totalCellPerTick += bones.numberOfUnits >= 10 ? bones.cellsPerTick : 0;
+        totalCellPerTick += lungs.numberOfUnits >= 10 ? lungs.cellsPerTick : 0;
+        totalCellPerTick += eyes.numberOfUnits >= 10 ? eyes.cellsPerTick : 0;
+        totalCellPerTick += hearts.numberOfUnits >= 10 ? hearts.cellsPerTick : 0;
+        totalCellPerTick += brains.numberOfUnits >= 10 ? brains.cellsPerTick : 0;
+    }
+
     public float time = 0;
     void Update()
     {
@@ -107,6 +127,7 @@ public class CellManager : MonoBehaviour
             time = 0;
         }
         time += Time.deltaTime;
+
         skin.UpdateInformation();
         kidnies.UpdateInformation();
         livers.UpdateInformation();
@@ -115,6 +136,8 @@ public class CellManager : MonoBehaviour
         eyes.UpdateInformation();
         hearts.UpdateInformation();
         brains.UpdateInformation();
+
+        Income.text = cells + "¢ @ " + totalCellPerTick + " ¢ps";
     }
 
     public void GenCell(string organ)
@@ -161,8 +184,8 @@ public class Organ
     public int pricePerUnit;
     [HideInInspector] public int cellsPerTick;
     public int cellsPerClick;
-    public CellManager owner;
-    public GenerationAlgorithms algorithm;
+    [HideInInspector] public CellManager owner;
+    [HideInInspector] public GenerationAlgorithms algorithm;
     public Text Information;
     public Button BuyOrgan;
     public Button GenCell;
@@ -184,10 +207,23 @@ public class Organ
             BuyOrgan.interactable = false;
         else
             BuyOrgan.interactable = true;
-        BuyOrgan.GetComponentInChildren<Text>().text = "<b>Buy: </b>" + pricePerUnit;
+
+        if (numberOfUnits < 1)
+            GenCell.interactable = false;
+        else
+            GenCell.interactable = true;
+
+        BuyOrgan.GetComponentInChildren<Text>().text = "<b>Buy: </b>" + pricePerUnit + "¢";
+
         if (numberOfUnits == 1)
-            GenCell.interactable = true; 
-        Information.text = numberOfUnits + "<b> X </b>" + cellsPerClick + "<b> || </b>" + cellsPerTick + " (¢ps)";
+            GenCell.interactable = true;
+
+        int perTic = 0;
+
+        if (numberOfUnits >= 10)
+            perTic = cellsPerTick;
+
+        Information.text = numberOfUnits + "<b> X </b>" + cellsPerClick + "<b> || </b>" + perTic + " ¢ps";
     }
 
     public void GenerateCells()
