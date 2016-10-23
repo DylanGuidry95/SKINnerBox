@@ -1,0 +1,18 @@
+How To Play SKINnerBox
+=======================================================================
+To buy a organ you must click on the corresponding buy button
+next to the organ you are trying to purchase.
+
+Once you own at least one organ of that organ type you can click
+on the image of that organ to generate cells based on the number of
+cell generated per click times the number of units you own. This is 
+denoted by the label under the buy button. 
+
+Once you own 10 units of any organ you will now passively generate 
+cells per second starting from the time the tenth unit of that organ was
+purchased.
+
+Once 10 units of each organ has been created and you have accumulated 1 million
+cells you can create a Human.
+
+There is no "Win Condition" in a skinner box you just do a little better each time.
